@@ -1,4 +1,4 @@
-from Lexer import *
+from Lexer import Lexer
 from ASTNode import *
 
 class Parser:
@@ -27,8 +27,9 @@ class Parser:
                  return self.parse_delete() 
         raise Exception(f"Syntax Error: Unknown start of query at {token.line}:{token.column}")
 
-
+    #---------------------
     # Parser for SELECT
+    #---------------------
     def parse_select(self):
         """Parse a SELECT statement."""
         # SELECT id, name FROM employees WHERE age > 30;
@@ -58,7 +59,9 @@ class Parser:
         self.advance()
 
         table = self.current_token()
+        #---------------------
         # nested query parsing
+        #---------------------
         if table.type == "SYMBOL" and table.value == "(":
             self.advance()
             subquery = self.parse()  
@@ -84,8 +87,9 @@ class Parser:
             children.append(ASTNode("WHERE", children=[condition]))
         return ASTNode("SELECT_STMT", children=children)
     
-
+    #---------------------    
     #Parser for Conditions
+    #---------------------
     def parse_condition(self):
         """Parse the WHERE condition"""
 
@@ -110,7 +114,9 @@ class Parser:
                 ASTNode("VALUE", right.value)
             ])
         
+        #---------------------
         # Nested subquery in condition where id=(...)
+        #---------------------
         elif right.type == "SYMBOL" and right.value == "(":
             
             self.advance()
@@ -127,7 +133,9 @@ class Parser:
         else:
             raise Exception(f"Syntax Error: Expected value or subquery in condition..\nAt line {self.current_token().line}, column {self.current_token().column} ")
     
+    #---------------------
     #Parser for insert
+    #---------------------
     def parse_insert(self):
         """Parse the INSERT condition"""
         #INSERT INTO users VALUES (1, 'name', 30);
@@ -168,8 +176,10 @@ class Parser:
             return ASTNode("INSERT_STMT", children=[ ASTNode("TABLE", table.value), ASTNode("VALUES", children=values) ]) 
         else: 
             raise Exception(f"Syntax Error: Expected VALUES.\nAt line {self.current_token().line}, column {self.current_token().column}")
-        
+
+    #---------------------  
     #Parser for update
+    #---------------------
     def parse_update(self):
         """Parse UPDATE query"""
         #UPDATE users SET age = 31 WHERE name = 'name';
@@ -202,7 +212,9 @@ class Parser:
             assign_node = ASTNode("ASSIGNMENT", children=[
                  ASTNode("COLUMN", col.value), 
                  ASTNode("VALUE", val.value) ])
+        #---------------------
         #nested query
+        #---------------------
         elif val.type == "SYMBOL" and val.value == "(": 
             self.advance() 
             subquery = self.parse() 
@@ -217,7 +229,9 @@ class Parser:
         
         return ASTNode("UPDATE_STMT", children=[ ASTNode("TABLE", table.value), assign_node ])
     
+    #---------------------
     #Parser for delete
+    #---------------------
     def parse_delete(self):
         """Parse DELETE query"""
         #DELETE FROM users WHERE age > 30;
@@ -246,13 +260,13 @@ class Parser:
         return ASTNode("DELETE_STMT", children=children)
 
 
-# if __name__ == "__main__": 
-#         try:
-#             lexer = Lexer() 
-#             sql = "DELETE FROM users WHERE id = 5"
-#             tokens = lexer.tokenize(sql) 
-#             parser = Parser(tokens) 
-#             ast = parser.parse() 
-#             print(ast)
-#         except Exception as e:
-#             print(e)
+if __name__ == "__main__": 
+        try:
+            lexer = Lexer() 
+            sql = "DELETE FROM users WHERE id = 5"
+            tokens = lexer.tokenize(sql) 
+            parser = Parser(tokens) 
+            ast = parser.parse() 
+            print(ast)
+        except Exception as e:
+            print(e)
