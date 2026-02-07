@@ -13,30 +13,30 @@ class Parser:
         self.pos += 1
 
     def parse(self): 
+        """Parse the SQL query starting from the first token."""
         token = self.current_token() 
         if token.type == "KEYWORD": 
             kw = token.value.upper() 
-        if kw == "SELECT": 
-            return self.parse_select() 
-        elif kw == "INSERT": 
-            return self.parse_insert() 
-        elif kw == "UPDATE": 
-            return self.parse_update() 
-        elif kw == "DELETE":
-             return self.parse_delete() 
+            if kw == "SELECT": 
+                return self.parse_select() 
+            elif kw == "INSERT": 
+                return self.parse_insert() 
+            elif kw == "UPDATE": 
+                return self.parse_update() 
+            elif kw == "DELETE":
+                 return self.parse_delete() 
         raise Exception(f"Syntax Error: Unknown start of query at {token.line}:{token.column}")
 
 
     # Parser for SELECT
     def parse_select(self):
+        """Parse a SELECT statement."""
+        # SELECT id, name FROM employees WHERE age > 30;
         select_list = []
-        if self.current_token().value.upper() != "SELECT": 
-            raise Exception(f"Syntax Error: Expected SELECT.\nAt line {self.current_token().line}, column {self.current_token().column} ") 
         self.advance()
 
         while True:
             token = self.current_token()
-
             if token.type == "WILDCARD":
                 select_list.append(ASTNode("WILDCARD", token.value)) 
                 self.advance()
@@ -67,8 +67,7 @@ class Parser:
             self.advance()
 
             children = [ASTNode("SELECT_LIST", children=select_list),
-                        ASTNode("SUBQUERY", children=[subquery])]
-            
+                        ASTNode("SUBQUERY", children=[subquery])]  
         else:
             if table.type == "KEYWORD":
                 raise Exception(f"Syntax Error: Reserved keyword '{table.value}' cannot be used as a table name.\nAt line {table.line}, column {table.column} ")
@@ -88,6 +87,8 @@ class Parser:
 
     #Parser for Conditions
     def parse_condition(self):
+        """Parse the WHERE condition"""
+
         left = self.current_token()
         if left.type == "KEYWORD":
             raise Exception(f"Syntax Error: Reserved keyword '{left.value}' cannot be used as a column in condition.\nAt line {left.line}, column {left.column} ")
@@ -96,7 +97,7 @@ class Parser:
         self.advance()
 
         op = self.current_token()
-        if op.type != "OPERATOR":
+        if op.type is None or op.type != "OPERATOR":
             raise Exception(f"Syntax Error: Expected operator in condition.\nAt line {op.line}, column {op.column} ")
         self.advance()
 
@@ -109,8 +110,9 @@ class Parser:
                 ASTNode("VALUE", right.value)
             ])
         
+        # Nested subquery in condition where id=(...)
         elif right.type == "SYMBOL" and right.value == "(":
-            # Nested subquery in condition
+            
             self.advance()
             subquery = self.parse()
             if self.current_token().value != ")":
@@ -127,6 +129,8 @@ class Parser:
     
     #Parser for insert
     def parse_insert(self):
+        """Parse the INSERT condition"""
+        #INSERT INTO users VALUES (1, 'name', 30);
         if self.current_token().value.upper() != "INSERT":
             raise Exception(f"Syntax Error: Expected INSERT.\nAt line {self.current_token().line}, column {self.current_token().column}")
         self.advance()
@@ -141,34 +145,34 @@ class Parser:
         self.advance()
          
         if self.current_token().value.upper() == "VALUES":
-            self.advance()
-            if self.current_token().value != "(":
-                raise Exception(f"Syntax Error: Expected (.\nAt line {self.current_token().line}, column {self.current_token().column}")
-            self.advance()
-            val = self.current_token()
-            if val.type != "VALUE":
-                raise Exception(f"Syntax Error: Expected value.\nAt line {val.line}, column {val.column}")
-            self.advance()
-            if self.current_token().value != ")":
-                raise Exception(f"Syntax Error: Expected ).\nAt line {self.current_token().line}, column {self.current_token().column}")
-            self.advance()
-            return ASTNode("INSERT_STMT", children=[
-                ASTNode("TABLE", table.value),
-                ASTNode("VALUE", val.value)
-            ])
-    
-         # INSERT INTO ... (SELECT ...) subquery
-        elif self.current_token().value.upper() == "SELECT":
-            subquery = self.parse_select()
-            return ASTNode("INSERT_STMT", children=[
-                ASTNode("TABLE", table.value),
-                ASTNode("SUBQUERY", children=[subquery])
-            ])
-        else:
-            raise Exception(f"Syntax Error: Expected VALUES or SELECT .\nAt line {self.current_token().line}, column {self.current_token().column}")
-
+            self.advance() 
+            #For Parsing single/multiple values (a,b,c)
+            if self.current_token().value != "(": 
+                raise Exception(f"Syntax Error: Expected (.\nAt line {self.current_token().line}, column {self.current_token().column}") 
+            self.advance() 
+            values = [] 
+            while True: 
+                val = self.current_token() 
+                if val.type != "VALUE": 
+                    raise Exception(f"Syntax Error: Expected value.\nAt line {val.line}, column {val.column}") 
+                values.append(ASTNode("VALUE", val.value)) 
+                self.advance() 
+                if self.current_token().value == ",": 
+                    self.advance() 
+                    continue 
+                elif self.current_token().value == ")": 
+                    self.advance() 
+                    break 
+                else: 
+                    raise Exception(f"Syntax Error: Expected , or ).\nAt line {self.current_token().line}, column {self.current_token().column}") 
+            return ASTNode("INSERT_STMT", children=[ ASTNode("TABLE", table.value), ASTNode("VALUES", children=values) ]) 
+        else: 
+            raise Exception(f"Syntax Error: Expected VALUES.\nAt line {self.current_token().line}, column {self.current_token().column}")
+        
     #Parser for update
     def parse_update(self):
+        """Parse UPDATE query"""
+        #UPDATE users SET age = 31 WHERE name = 'name';
         if self.current_token().value.upper()!="UPDATE":
             raise Exception(f"Syntax Error: Expected UPDATE.\nAt line {self.current_token().line}, column {self.current_token().column} ")
         self.advance()
@@ -198,6 +202,7 @@ class Parser:
             assign_node = ASTNode("ASSIGNMENT", children=[
                  ASTNode("COLUMN", col.value), 
                  ASTNode("VALUE", val.value) ])
+        #nested query
         elif val.type == "SYMBOL" and val.value == "(": 
             self.advance() 
             subquery = self.parse() 
@@ -214,6 +219,8 @@ class Parser:
     
     #Parser for delete
     def parse_delete(self):
+        """Parse DELETE query"""
+        #DELETE FROM users WHERE age > 30;
         if self.current_token().value.upper()!="DELETE":
             raise Exception(f"Syntax Error: DELETE.\nAt line {self.current_token().line}, column {self.current_token().column}")
         self.advance()
@@ -228,6 +235,9 @@ class Parser:
         self.advance()
         children = [ASTNode("TABLE", table.value)]
 
+        if self.current_token().type == "SYMBOL" and self.current_token().value == ",":
+            raise Exception(f"Syntax Error: Multiple tables not allowed in DELETE.\nAt line {self.current_token().line}, column {self.current_token().column}")
+        
         if self.current_token().type == "KEYWORD" and self.current_token().value.upper() == "WHERE": 
             self.advance() 
             condition = self.parse_condition() 
@@ -236,14 +246,13 @@ class Parser:
         return ASTNode("DELETE_STMT", children=children)
 
 
-if __name__ == "__main__": 
-        try:
-            lexer = Lexer() 
-            sql = "UPDATE employees SET salary=9"
-
-            tokens = lexer.tokenize(sql) 
-            parser = Parser(tokens) 
-            ast = parser.parse() 
-            print(ast)
-        except Exception as e:
-            print(e)
+# if __name__ == "__main__": 
+#         try:
+#             lexer = Lexer() 
+#             sql = "DELETE FROM users WHERE id = 5"
+#             tokens = lexer.tokenize(sql) 
+#             parser = Parser(tokens) 
+#             ast = parser.parse() 
+#             print(ast)
+#         except Exception as e:
+#             print(e)
