@@ -1,0 +1,117 @@
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: SELECT name, age FROM users WHERE age > 18;
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: INSERT INTO users (name, age, email) VALUES ('John Doe', 25, 'john@example.com');
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: UPDATE users SET age = 26 WHERE name = 'John Doe';
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: DELETE FROM users WHERE age < 18;
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: CREATE TABLE students (id INT, name VARCHAR, grade INT);
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: DROP TABLE students;
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: ALTER TABLE users ADD email VARCHAR;
+
+Result: SUCCESS
+
+Message: Query validated successfully
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: SELECT FROM users;
+
+Result: FAILED
+
+--- ERRORS ---
+
+Error ID: SYNTAX_001
+Type: Syntax
+Message: Expected column name, number, or * at line 1
+Line: 0, Column: 0
+
+============================================================
+
+============================================================
+SQL QUERY VALIDATION RESULT
+============================================================
+
+Query: SELECT name, age WHERE age > 18;
+
+Result: FAILED
+
+--- ERRORS ---
+
+Error ID: SYNTAX_001
+Type: Syntax
+Message: Expected FROM after column list at line 1
+Line: 0, Column: 0
+
+============================================================
