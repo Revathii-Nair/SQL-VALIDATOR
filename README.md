@@ -1,15 +1,17 @@
 # ANSI SQL Query Validator
-
 A simple command-line tool to validate SQL queries without executing them.
 
+---
 ## What This Project Does
-
 This tool checks if your SQL queries are written correctly. It's like a spell-checker for SQL code. It doesn't run the queries or connect to any database - it just checks if they follow proper SQL rules.
 
-## Requirements
+---
 
+## Requirements
 - Python 3.6 or higher
 - No external libraries needed (uses only built-in Python modules)
+
+---
 
 ## Project Structure
 
@@ -36,29 +38,21 @@ sql_validator/
 └── README.md            # This file
 ```
 
+---
 ## How to Run the Program
 
-### Step 1: Open Command Prompt/Terminal
+### Step 1: Clone the Repository
 
-**On Windows:**
-
-- Press `Windows Key + R`
-- Type `cmd` and press Enter
-
-**On Mac/Linux:**
-
-- Open Terminal application
-
-### Step 2: Navigate to Project Folder
+Open your terminal or command prompt and run the following command to download the project:
 
 ```bash
-cd path/to/sql_validator
+git clone https://github.com/revathii-nair/sql-validator.git
 ```
 
-Example:
+### Step 2: Enter the Project Directory
 
 ```bash
-cd C:\Users\YourName\Desktop\sql_validator
+cd sql-validator
 ```
 
 ### Step 3: Run the Program
@@ -67,12 +61,12 @@ cd C:\Users\YourName\Desktop\sql_validator
 python main.py
 ```
 
+---
 ## How to Use the Validator
 
 Once you run the program, you'll see a menu with 5 options:
 
 ### Option 1: Validate Inline Query
-
 This lets you type a SQL query directly.
 
 **Example:**
@@ -114,6 +108,8 @@ Shows information about supported SQL commands and usage tips.
 
 Quit the program.
 
+---
+
 ## Supported SQL Commands
 
 The validator supports these SQL commands:
@@ -130,6 +126,8 @@ The validator supports these SQL commands:
 - **CREATE TABLE**: Make new tables
 - **DROP TABLE**: Delete tables
 - **ALTER TABLE**: Change table structure
+
+---
 
 ## Example Queries
 
@@ -177,6 +175,7 @@ SELECT * FROM;
 INSERT INTO users (name) VALUES ('John', 25);
 ```
 
+---
 ## Understanding the Output
 
 ### Success Example:
@@ -214,6 +213,7 @@ Line: 1, Column: 15
 ============================================================
 ```
 
+---
 ## Output Formats
 
 ### Text Format (Default)
@@ -235,10 +235,7 @@ Example:
 }
 ```
 
-### Custom Format
-
-Special format for integration with other tools.
-
+---
 ## Saving Results
 
 After validation, the program asks:
@@ -249,6 +246,7 @@ Save output to file? (yes/no):
 
 Type `yes` and enter a filename to save results.
 
+---
 ## Testing the Validator
 
 A test file `test_queries.sql` is included with sample queries.
@@ -260,28 +258,7 @@ A test file `test_queries.sql` is included with sample queries.
 3. Enter: `test_queries.sql`
 4. See results for all queries
 
-## Troubleshooting
-
-### Problem: "python is not recognized"
-
-**Solution:**
-
-- Make sure Python is installed
-- Try `python3` instead of `python`
-
-### Problem: "No module named 'lexer'"
-
-**Solution:**
-
-- Make sure you're in the correct folder
-- All files should be in the same folder
-
-### Problem: "File not found"
-
-**Solution:**
-
-- Check the file path is correct
-- Use full path if needed: `C:\Users\Name\file.sql`
+---
 
 ## How It Works (Simple Explanation)
 
@@ -295,6 +272,7 @@ Think of it like checking an essay:
 - Parser = Checking grammar
 - Validator = Making sure it makes sense
 
+---
 ## Project Limitations
 
 - Does NOT execute queries
@@ -302,32 +280,14 @@ Think of it like checking an essay:
 - Does NOT check if tables/columns actually exist
 - Only validates syntax and structure
 
-## Need Help?
+---
+## UML DIAGRAMS
 
-If you get stuck:
-
-1. Check the error message carefully
-2. Look at the example queries
-3. Make sure your query ends with a semicolon (;)
-4. Check spelling of SQL keywords (SELECT, FROM, WHERE, etc.)
-
-## Quick Reference Card
-
-```
-VALID QUERY CHECKLIST:
-☑ Starts with SQL keyword (SELECT, INSERT, etc.)
-☑ Has table name after FROM (for SELECT/DELETE)
-☑ Has table name after INTO (for INSERT)
-☑ Has table name before SET (for UPDATE)
-☑ Ends with semicolon (;)
-☑ Parentheses are balanced ( )
-☑ String values in single quotes 'like this'
-```
-
-# UML DIAGRAMS
-
+#### Sequence Diagram
 ![WhatsApp Image 2026-02-03 at 9 54 57 PM](https://github.com/user-attachments/assets/57197b9a-8314-4d89-91b9-c1da83657f51 'Sequence Diagram')
+#### Flow chart
 ![WhatsApp Image 2026-02-03 at 9 59 22 PM](https://github.com/user-attachments/assets/6973c6b1-b204-4c27-9f27-5d54b3a1a6f1 'Flow chart')
-
+#### Class Diagram
 ![WhatsApp Image 2026-02-03 at 10 04 41 PM](https://github.com/user-attachments/assets/7d95e5b1-aeb0-4e8c-8760-cb67a31ab7af 'Class Diagram')
+#### Componenet Diagram
 ![WhatsApp Image 2026-02-03 at 10 50 13 PM](https://github.com/user-attachments/assets/135f74ec-1e42-48bd-bb3d-5cd87abf7202 'Componenet Diagram')
