@@ -12,7 +12,7 @@ class ASTNode:
         self.children = children if children else []
     
     def __repr__(self):
-        return f"ASTNode({self.type}, {self.value})"
+        return f"ASTNode({self.type}, {self.value},{self.children})"
 
 
 class Parser:
@@ -235,7 +235,7 @@ class Parser:
             )
         self.consume('KEYWORD')
         
-        # Table name i.e. it saves the token.value 
+        # Table name
         table = self.consume('IDENTIFIER')
         
         # Column definitions
@@ -294,7 +294,7 @@ class Parser:
             )
         self.consume('KEYWORD')
         
-        # Optional COLUMN keyword
+        # ✅ Optional COLUMN keyword
         if (
             self.current_token().type == 'KEYWORD'
             and self.current_token().value.upper() == 'COLUMN'
@@ -401,7 +401,7 @@ class Parser:
 
         token = self.current_token()
 
-        # EXISTS (subquery)
+        # ✅ EXISTS (subquery)
         if token.type == 'KEYWORD' and token.value.upper() == 'EXISTS':
             self.consume('KEYWORD')  # EXISTS
             self.consume('LPAREN')
@@ -412,12 +412,12 @@ class Parser:
 
             return ('EXISTS', subquery)
 
-        # Left side (supports table.column)
+        # ✅ Left side (supports table.column)
         left = self.parse_identifier()
 
         operator_token = self.current_token()
 
-        # IN (subquery)
+        # ✅ IN (subquery)
         if operator_token.type == 'KEYWORD' and operator_token.value.upper() == 'IN':
             self.consume('KEYWORD')  # IN
             self.consume('LPAREN')
@@ -428,10 +428,10 @@ class Parser:
 
             return ('IN', left, subquery)
 
-        # Normal operator
+        # ✅ Normal operator
         operator = self.consume('OPERATOR').value
 
-        # Right side (supports table.column)
+        # ✅ Right side (supports table.column)
         if self.current_token().type == 'IDENTIFIER':
             right = self.parse_identifier()
         elif self.current_token().type in ('STRING', 'NUMBER'):
@@ -476,22 +476,3 @@ class Parser:
             columns.append((col_name, col_type))
         
         return columns
-
-
-# Example usage
-if __name__ == "__main__":
-    from lexer import Lexer
-    
-    lexer = Lexer()
-    test_query = "SELECT name, age FROM users WHERE age > 18;"
-    
-    tokens = lexer.tokenize(test_query)
-    parser = Parser(tokens)
-    
-    try:
-        ast = parser.parse()
-        print("Parsing successful!")
-        print("AST:", ast)
-    except SyntaxError as e:
-        print("Parsing failed:", e)
-

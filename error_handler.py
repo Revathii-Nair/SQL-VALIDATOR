@@ -68,27 +68,3 @@ class ErrorHandler:
         
         return "\n".join(output)
 
-
-# Example usage
-if __name__ == "__main__":
-    from validator import ValidationError
-    
-    handler = ErrorHandler()
-    
-    # Add some sample errors
-    handler.collect(ValidationError(
-        'VAL_001',
-        'Validation',
-        'Table name is missing',
-        1, 20
-    ))
-    
-    handler.collect(ValidationError(
-        'SYNTAX_002',
-        'Syntax',
-        'Expected semicolon',
-        1, 30
-    ))
-    
-    # Display all errors
-    print(handler.format_all_errors())

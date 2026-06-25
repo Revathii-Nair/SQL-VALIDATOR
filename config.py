@@ -81,20 +81,3 @@ class ConfigManager:
         return self.config
 
 
-# Example usage
-if __name__ == "__main__":
-    manager = ConfigManager()
-    
-    # Load some options
-    options = {
-        'dialect': 'ANSI',
-        'format': 'json',
-        'strict': False
-    }
-    
-    manager.load_options(options)
-    
-    # Get config summary
-    config = manager.get_config()
-    print("Current configuration:")
-    print(config.get_config_summary())

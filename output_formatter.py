@@ -122,34 +122,3 @@ class OutputFormatter:
         except Exception as e:
             print(f"Error writing to file: {e}")
             return False
-
-
-# Example usage
-if __name__ == "__main__":
-    from validator import ValidationError
-    
-    formatter = OutputFormatter()
-    
-    # Sample successful result
-    test_query = "SELECT * FROM users;"
-    success_result = {
-        'success': True,
-        'errors': [],
-        'warnings': []
-    }
-    
-    print("TEXT FORMAT:")
-    print(formatter.format_text(test_query, success_result))
-    print("\n" + "=" * 60 + "\n")
-    
-    # Sample failed result
-    fail_result = {
-        'success': False,
-        'errors': [
-            ValidationError('VAL_001', 'Validation', 'Table name missing', 1, 15)
-        ],
-        'warnings': []
-    }
-    
-    print("JSON FORMAT:")
-    print(formatter.format_json(test_query, fail_result))

@@ -8,8 +8,8 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, BarColumn, TextColumn, TimeElapsedColumn
 from rich.panel import Panel
 from rich.text import Text
-from lexer import Lexer
-from parser import Parser
+from Lexer import Lexer
+from Parser import Parser
 from validator import Validator
 from error_handler import ErrorHandler
 from output_formatter import OutputFormatter
@@ -313,8 +313,3 @@ EXAMPLE QUERIES:
             elif choice == '5':
                 self.console.print("\n[bold green]Thank you for using SQL Query Validator![/bold green]")
                 self.running = False
-
-
-if __name__ == "__main__":
-    cli = CLIEngine()
-    cli.run()

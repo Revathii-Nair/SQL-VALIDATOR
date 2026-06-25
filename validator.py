@@ -321,21 +321,3 @@ class Validator:
                 'ALTER TABLE statement must specify a column',
                 0, 0
             ))
-
-
-# Example usage
-if __name__ == "__main__":
-    from lexer import Lexer
-    from parser import Parser
-    
-    lexer = Lexer()
-    test_query = "SELECT name, age FROM users WHERE age > 18;"
-    
-    tokens = lexer.tokenize(test_query)
-    parser = Parser(tokens)
-    ast = parser.parse()
-    
-    validator = Validator()
-    result = validator.validate(ast)
-    
-    print("Validation result:", result)

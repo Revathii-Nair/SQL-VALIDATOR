@@ -9,11 +9,11 @@ class Token:
     """Represents one piece of SQL (like a word in a sentence)"""
     
     def __init__(self, token_type, value, line, column):
-        self.type = token_type      # What kind of token (KEYWORD, IDENTIFIER, etc.)
-        self.value = value          # The actual text
-        self.line = line            # Which line it's on
-        self.column = column        # Position in that line
-    
+        self.type = token_type      
+        self.value = value         
+        self.line = line            
+        self.column = column        
+
     def __repr__(self):
         return f"Token({self.type}, '{self.value}', Line:{self.line}, Col:{self.column})"
 
@@ -32,7 +32,7 @@ class Lexer:
             'LEFT', 'RIGHT', 'OUTER', 'DISTINCT', 'ASC', 'DESC'
         }
         
-        # Define token patterns (how to recognize different parts)
+       
         self.token_patterns = [
             ('NUMBER', r'\d+(\.\d+)?'),           # Numbers like 123 or 12.34
             ('STRING', r"'[^']*'"),               # Strings like 'hello'
@@ -92,30 +92,3 @@ class Lexer:
         tokens.append(Token('EOF', '', line_num, len(sql_text) - line_start + 1))
         
         return tokens
-
-
-# Example usage (for testing)
-if __name__ == "__main__":
-    lexer = Lexer()
-    
-    # Test with a simple query
-    test_query = "SELECT name, age FROM users WHERE age > 18;"
-    
-    tokens = lexer.tokenize(test_query)
-    
-    print("Tokens generated:")
-    for token in tokens:
-        print(token)
-        
-# Token(KEYWORD, 'SELECT', Line:1, Col:1)
-# Token(IDENTIFIER, 'name', Line:1, Col:8)
-# Token(COMMA, ',', Line:1, Col:12)
-# Token(IDENTIFIER, 'age', Line:1, Col:14)
-# Token(KEYWORD, 'FROM', Line:1, Col:18)
-# Token(IDENTIFIER, 'users', Line:1, Col:23)
-# Token(KEYWORD, 'WHERE', Line:1, Col:29)
-# Token(IDENTIFIER, 'age', Line:1, Col:35)
-# Token(OPERATOR, '>', Line:1, Col:39)
-# Token(NUMBER, '18', Line:1, Col:41)
-# Token(SEMICOLON, ';', Line:1, Col:43)
-# Token(EOF, '', Line:1, Col:44)
